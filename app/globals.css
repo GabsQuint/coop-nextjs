@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0b0b0f;
+}
+
+html {
+  scroll-behavior: smooth; /* âncoras com transição suave */
+}
+
+/* camada fixa com o papel de parede de pixels */
+.coop-bg-fixed {
+  position: fixed;
+  inset: 0;                 /* cobre a tela toda */
+  z-index: -10;             /* sempre atrás de tudo */
+  background-image:
+    url('/pixels.png'),
+    radial-gradient(1200px 800px at 20% 10%, rgba(0,0,0,.45), transparent 60%),
+    radial-gradient(1200px 800px at 80% 90%, rgba(0,0,0,.45), transparent 60%),
+    linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.35));
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat;
+  background-size: auto, 1200px 800px, 1200px 800px, auto;
+  background-position: top left, top left, bottom right, 0 0;
+  /* pixels não se movem no scroll */
+  background-attachment: fixed, fixed, fixed, fixed;
+}
+
+@media (max-width: 768px) {
+  .coop-bg-fixed { background-attachment: scroll, scroll, scroll, scroll; }
+}
+
+/* utilitário de “vidro” para os blocos */
+.glass {
+  background: rgba(0,0,0,.40);            /* transparência */
+  backdrop-filter: blur(8px);              /* o blur acontece no que está ATRÁS (os pixels) */
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+
+/* ===== Splash animations ===== */
+@keyframes loader {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+.animate-loader { animation: loader 1.2s ease-in-out infinite; }
+
+@keyframes pop {
+  0%   { opacity: 0; transform: scale(.92); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* ===== Conteúdo entra suave depois do splash ===== */
+body:not(.app-loaded) .reveal {
+  opacity: 0;
+  transform: translateY(8px) scale(.985);
+}
+body.app-loaded .reveal {
+  opacity: 1;
+  transform: none;
+  transition: opacity .5s ease, transform .6s cubic-bezier(.2,.8,.2,1);
+}
+body.app-loaded .reveal-1 { transition-delay: .10s; }
+body.app-loaded .reveal-2 { transition-delay: .20s; }
+body.app-loaded .reveal-3 { transition-delay: .30s; }
+
+html, body { height: 100%; }
+body { background: var(--bg); color: rgb(244 244 245); }
